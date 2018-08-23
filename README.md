@@ -41,7 +41,7 @@ shout().
 
 For now use Pip:
 
-    pip install https://github.com/zeromq/pyre/archive/master.zip
+    pip install https://github.com/ropod-project/pyre/archive/master.zip
 
 ## API
 
