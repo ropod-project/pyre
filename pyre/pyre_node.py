@@ -27,6 +27,7 @@ class PyreNode(object):
         self.outbox = outbox                        # Outbox back to application
         self._terminated = False                    # API shut us down
         self._verbose = False                       # Log all traffic (logging module?)
+        self.beacon_interface = ''                  # Beacon interface
         self.beacon_port = ZRE_DISCOVERY_PORT       # Beacon port number
         self.interval = 0                           # Beacon interval 0=default
         self.beacon = None                          # Beacon actor
@@ -70,6 +71,11 @@ class PyreNode(object):
 
             # Our hostname is provided by zbeacon
             self.beacon.send_unicode("CONFIGURE", zmq.SNDMORE)
+
+            # interface packing code from https://bit.ly/2qN3ZUz
+            interface_byte_str = bytes(self.beacon_interface, 'utf-8')
+            self.beacon.send(struct.pack("I", len(interface_byte_str)) + interface_byte_str,
+                             zmq.SNDMORE)
             self.beacon.send(struct.pack("I", self.beacon_port))
             hostname = self.beacon.recv_unicode()
 
@@ -155,6 +161,8 @@ class PyreNode(object):
             self.headers.update({header_name: header_value})
         elif command == "SET VERBOSE":
             self.verbose = True
+        elif command == "SET INTERFACE":
+            self.beacon_interface = request.pop(0).decode('UTF-8')
         elif command == "SET PORT":
             self.beacon_port = int(request.pop(0))
         elif command == "SET INTERVAL":
