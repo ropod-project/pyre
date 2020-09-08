@@ -25,7 +25,7 @@ except NameError:
 
 class Pyre(object):
 
-    def __init__(self, name=None, ctx=None, *args, **kwargs):
+    def __init__(self, name=None, *args, **kwargs):
         """Constructor, creates a new Zyre node. Note that until you start the
         node it is silent and invisible to other nodes on the network.
         The node name is provided to other nodes during discovery. If you
@@ -37,7 +37,6 @@ class Pyre(object):
         Kwargs:
             ctx: PyZMQ Context, if not specified a new context will be created
         """
-        super(Pyre, self).__init__(*args, **kwargs)
         ctx = kwargs.get('ctx')
         if ctx == None:
             ctx = zmq.Context()
